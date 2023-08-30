@@ -36,19 +36,7 @@ http://clang.llvm.org/docs/HowToSetupToolingForLLVM.html
 
 from __future__ import print_function
 
-import argparse
-import glob
-import json
-import multiprocessing
-import os
-import re
-import shutil
-import subprocess
-import sys
-import tempfile
-import threading
-import traceback
-import yaml
+import argparse, glob, json, multiprocessing, os, re, shutil, subprocess, sys, tempfile, threading, traceback, yaml
 
 is_py2 = sys.version[0] == '2'
 
@@ -112,8 +100,7 @@ def merge_replacement_files(tmpdir, mergefile):
   """Merge all replacement files in a directory into a single file"""
   # The fixes suggested by clang-tidy >= 4.0.0 are given under
   # the top level key 'Diagnostics' in the output yaml files
-  mergekey="Diagnostics"
-  merged=[]
+  mergekey, merged ="Diagnostics", []
   for replacefile in glob.iglob(os.path.join(tmpdir, '*.yaml')):
     content = yaml.safe_load(open(replacefile, 'r'))
     if not content:
@@ -149,7 +136,7 @@ def apply_fixes(args, tmpdir):
   invocation = [args.clang_apply_replacements_binary]
   if args.format:
     invocation.append('-format')
-  if args.style:
+  elif args.style:
     invocation.append('-style=' + args.style)
   invocation.append(tmpdir)
   subprocess.call(invocation)
